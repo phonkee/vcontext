@@ -89,8 +89,7 @@ class Context(object):
 
         # copy to new list
         parts = parsed[:]
-
-        item = self._build_item(self.data, parts, value=value)
+        self._build_item(self.data, parts, value=value)
 
     def _build_item(self, object, parts, value=None):
         """
@@ -201,6 +200,21 @@ class Context(object):
         :return:
         """
         return Context(copy.deepcopy(self.data), dict_=self.dict_)
+
+    def get(self, item, default=None):
+        """
+        If not found return/set default value
+        :param item: dotted syntax item
+        :param default: default value
+        :return:
+        """
+
+        try:
+            return self[item]
+        except:
+            self[item] = default
+
+        return default
 
     def value(self, item=None):
         """
