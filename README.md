@@ -1,7 +1,7 @@
 vcontext
 ========
 
-vcontext package provides just single bu asesome object Context. 
+`vcontext` package provides just single but awesome object `Context`. 
 Context is dictionary like datastructure with custom access to items.
 You can access your data by dot access. 
 Context does not wrap data in itself, rather just access them. Context has `data` attribute where data is stored.
