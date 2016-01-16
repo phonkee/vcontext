@@ -211,7 +211,7 @@ class Context(object):
 
         try:
             return self[item]
-        except:
+        except KeyError:
             self[item] = default
 
         return default
