@@ -8,7 +8,7 @@ with open('README.md') as file:
 
 setup(
     name='vcontext',
-    version='0.3',
+    version='0.4',
     url='https://github.com/phonkee/vcontext',
     description='Context data structure',
     long_description=long_description,

@@ -31,7 +31,7 @@ class Context(object):
         :param item:
         :return:
         """
-        parsed = self.parse(item)
+        parsed = self._parse_item(item)
         if not parsed:
             raise KeyError('no key provided')
 
@@ -56,7 +56,7 @@ class Context(object):
         :param item: dotted syntax
         :return:
         """
-        parsed = self.parse(item)
+        parsed = self._parse_item(item)
         if not parsed:
             raise KeyError('no key provided')
 
@@ -82,7 +82,7 @@ class Context(object):
         """
 
         # get parsed parts of item
-        parsed = self.parse(str(item))
+        parsed = self._parse_item(str(item))
 
         if not parsed:
             raise NameError("Item name not given")
@@ -174,13 +174,6 @@ class Context(object):
 
         return object
 
-    def build_part(self, part, value=None):
-        if isinstance(part, (int, long)):
-            result = [None for _ in range(part + 1)]
-            return result
-
-        return self.dict_()
-
     def dumps(self, item=None, **kwargs):
         """
         Dumps returns json string for given item. If no item is given whole dict is returned
@@ -216,7 +209,7 @@ class Context(object):
 
         return default
 
-    def value(self, item=None):
+    def copy_value(self, item=None):
         """
         value deep copies just value and returns. If not found raise error
         :param item:
@@ -229,7 +222,7 @@ class Context(object):
         return copy.deepcopy(obj)
 
     @classmethod
-    def parse(cls, item):
+    def _parse_item(cls, item):
         """
         PArse item into parts. Currently we use just split with some type conversions.
         :param item:
