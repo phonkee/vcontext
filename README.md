@@ -62,7 +62,7 @@ Isn't that neat small helper for your next projects?
 Contribute
 ----------
 
-Contributions are welcome, there is still a lot to enhance this nice datastructure
+Contributions are welcome, there are still a lot of parts to be enhanced.
 
 Author
 ------
