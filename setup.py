@@ -22,4 +22,5 @@ setup(
     # requirements
     install_requires=[
     ],
+    test_suite="vcontext.tests",
 )
