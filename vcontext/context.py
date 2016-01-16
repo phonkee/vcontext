@@ -2,29 +2,7 @@
 Context
 
 context is a proxy datastructure that provides advanced  dict-like access to underlying data with dotted notation.
-
-Example:
-
-    context = Context({
-        'result': [
-            'user': {
-                'username': 'phonkee'
-            }
-        ]
-    })
-    assert context['result.0.user.username'] == 'phonkee'
-
-Context also supports creating of new items in it.
-so if we want to recreate the same datastructure that in previous example we can do this
-
-    context = Context()
-    context['result.0.user.username'] = 'phonkee'
-
-context.data will contain the same dictionary as in previous example
-
-Context give you the possibility to delete data:
-    del context['result.0.user.username']
-
+See README.md
 """
 import copy
 import json
