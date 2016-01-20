@@ -6,6 +6,7 @@ See README.md
 """
 import copy
 import json
+import pprint
 
 
 class Context(object):
@@ -63,10 +64,17 @@ class Context(object):
         actual = self.data
         for i, part in enumerate(parsed):
 
+            # he
+
             try:
                 actual = actual[part]
+            except TypeError:
+                actual = getattr(actual, part)
             except (KeyError, IndexError):
                 raise KeyError(".".join([str(x) for x in parsed[:i+1]]))
+
+            while callable(actual):
+                actual = actual()
 
         return actual
 
@@ -238,22 +246,75 @@ class Context(object):
 
         return result
 
+    def keys(self, item=None):
+        """
+        Return all stored keys in sorted order.
+        :param item:
+        :return:
+        """
+
+        if item is not None:
+            current = self[item]
+        else:
+            current = self.data
+
+        return sorted(self._list_keys(current))
+
+    def _list_keys(self, object):
+
+        result = []
+
+        if isinstance(object, dict):
+            for k, v in object.iteritems():
+                if isinstance(v, (list, tuple, dict)):
+                    result += ["{}.{}".format(k, key) for key in self._list_keys(v)]
+                else:
+                    result.append(k)
+        elif isinstance(object, (list, tuple)):
+            for k, v in enumerate(object):
+                if isinstance(v, (list, tuple, dict)):
+                    result += ["{}.{}".format(k, key) for key in self._list_keys(v)]
+                else:
+                    result.append(k)
+
+        return result
+
 
 if __name__ == "__main__":
+
+    class Test(object):
+        something = 'else'
+        data = {
+            'mamma': 'mia'
+        }
+
+
     ctx = Context({
         'hello': {
             'hitty': 'kitty',
             'users': ["techno"],
+            'test': Test(),
         },
     })
     ctx['hello.users.5.user.username'] = 'phonkee'
     ctx['hello.users.5.user.name'] = 'Peter Vrba'
     ctx['hello.users.5.user.github'] = 'phonkee'
     ctx['hello.users.5.user.email.0'] = 'phonkee@phonkee.eu'
-    ctx['hello.list.0.1.2.3.4.5'] = 'yeah we support deep structures'
+    ctx['hello.list.0'] = 'yeah we support deep structures'
 
-    print ctx.dumps(indent=4)
+    ctx['hello.object'] = Test()
+    # print ctx.dumps(indent=4)
+
+    ctx['hello.test.data.mamma'] = 'hell'
+    # print ctx.data
+
+    # print ctx.keys()
 
     # ctx['result.users.5.user.name'] = 'Peter'
     # # ctx['result.users.88.user.username'] = 'phonkee'
     # print ctx.dumps()
+
+
+    context = Context()
+    context['hello.world'] = "yay"
+    print context.keys()

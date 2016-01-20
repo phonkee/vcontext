@@ -60,6 +60,18 @@ Context has also support for delete so let's assume that we use context from pre
 
 Isn't that neat small helper for your next projects?
 
+keys
+----
+
+Context also supports `keys` method. By calling this method context traverses recursively object. It has support for
+dict/list, for custom object it returns just the object key.
+
+    context = Context()
+    context['hello.world'] = 'yay'
+    assert context.keys() == ['hello.world'
+
+
+
 Contribute
 ----------
 

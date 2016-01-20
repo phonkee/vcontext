@@ -32,6 +32,23 @@ class ContextTest(unittest.TestCase):
         del context['hello.how.are.you.0']
         self.assertEqual(len(context['hello.how.are.you']), 0)
 
+    def test_getitem_method_call(self):
+        class Shout(object):
+            def shout(self):
+                return "shout"
+
+        class Shine(object):
+            def shine(self):
+                return "shine"
+
+        context = Context()
+        context['hello.test_call'] = Shout
+        self.assertEqual(context['hello.test_call.shout'], "shout")
+
+    def test_object(self):
+        """
+        Test access to object attributes
+        """
 
 if __name__ == "__main__":
     unittest.main()
