@@ -79,7 +79,19 @@ underlying datas by given `item`. Example:
 ```python
 context = Context()
 context['result.0'] = 'phonkee'
+```
 
+The data for context is now:
+
+```python
+assert context.data = {
+    'result': ['phonkee']
+}
+```
+
+Now we try to delete item
+
+```python
 del context['result.0']
 assert len(context['result']) == 0
 ```
