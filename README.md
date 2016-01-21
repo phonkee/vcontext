@@ -39,8 +39,10 @@ assert context['status'] == 200
 If the data is not found, `KeyError` is raised on part of item that was not found. Context provides `get` method where 
 you can specify default value if value is not found and that will never raise exception.
 
+## Build items:
 
-Context can also be used to build complicated datastructures with ease.
+Context would be useless if it only supported get of values. Context has support also to create/delete values on 
+underlying datas by given `item`. 
 Lets build a structure from previous example:
 
 ```python
@@ -61,24 +63,6 @@ assert context.data == {
             }
         }
     ]
-}
-```
-
-## Build items:
-
-Context would be useless if it only supported get of values. Context has support also to create/delete values on 
-underlying datas by given `item`. Example:
-
-```python
-context = Context()
-context['result.0'] = 'phonkee'
-```
-
-The data for context is now:
-
-```python
-assert context.data == {
-    'result': ['phonkee']
 }
 ```
 
