@@ -107,7 +107,7 @@ TODO:
 -----
 * add support for special list key __append__ so we can append to list. e.g: 
 ```python
-context['result.usernames.__append__'] = 'phonkee'` 
+context['result.usernames.__append__'] = 'phonkee'
 ```
 Author
 ------
