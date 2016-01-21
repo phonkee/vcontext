@@ -61,7 +61,6 @@ class ContextTest(unittest.TestCase):
             ),
             ({'hello.world.0.name': None, 'hello.world.1.name': None}, 'hello.world.0', ('hello.world.0.name', ),),
             ({'hello.world.0.name': None, 'hello.world.1.name': None}, 'hello.world', ('hello.world.0.name', 'hello.world.1.name'),),
-
         ]
 
         for dataitem in data:
