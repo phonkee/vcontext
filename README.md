@@ -34,8 +34,8 @@ You can access data like this:
     assert context['result.0.user.username'] == 'phonkee'
     assert context['status'] == 200
     
-If the data is not found, KeyError is raised on part of item that was not found. Context provides `get` method where 
-you can specify default value if value is not found.
+If the data is not found, `KeyError` is raised on part of item that was not found. Context provides `get` method where 
+you can specify default value if value is not found and that will never raise exception.
 
 Item can have multiple parts. Rules are following:
 * string - access to dictionary item or object attribute
