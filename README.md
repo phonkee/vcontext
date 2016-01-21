@@ -1,20 +1,17 @@
-vcontext
-========
+# vcontext
 
 `vcontext` package provides single object `Context`. 
 Context is dictionary like datastructure with custom access to items.
 You can access your data by dot access. 
 Context does not wrap data in itself, rather just access them. Context has `data` attribute where data is stored.
 
-`__getitem__` vs `__getattribute__`
--------------------------------
+#### `__getitem__` vs `__getattribute__`
 
 For vcontext I have decided to use `__getitem__` approach, since I wanted to have consistent dot access also to lists/tuples.
 This would be impossible using `__getattr__`.
 
 
-Example:
---------
+## Example:
 
 ```python
 context = Context({
@@ -70,8 +67,7 @@ assert context.data == {
 }
 ```
 
-Build items:
-------------
+## Build items:
 
 Context would be useless if it only supported get of values. Context has support also to create/delete values on 
 underlying datas by given `item`. Example:
@@ -98,8 +94,7 @@ assert len(context['result']) == 0
 
 Isn't that cute little helper?
 
-keys:
------
+## keys:
 
 Context also supports `keys` method. By calling this method context traverses recursively object. It has support for
 dict/list, for custom object it returns just the object key.
@@ -110,18 +105,17 @@ context['hello.world'] = 'yay'
 assert context.keys() == ['hello.world']
 ```
 
-Contribute:
------------
+## Contribute:
 
 Contributions are welcome, there are still a lot of parts to be enhanced.
 
-TODO:
------
+## TODO:
+
 * add support for special list key __append__ so we can append to list. e.g: 
 ```python
 context['result.usernames.__append__'] = 'phonkee'
 ```
-Author
-------
+
+## Author
 
 Peter Vrba (phonkee)
