@@ -246,10 +246,11 @@ class Context(object):
 
         return result
 
-    def keys(self, item=None):
+    def keys(self, item=None, strip=False):
         """
         Return all stored keys in sorted order.
-        :param item:
+        :param item: item to start with ([] is used)
+        :param strip: if item is given whether to strip item from keys
         :return:
         """
 
@@ -259,13 +260,14 @@ class Context(object):
 
             # if item is not dict/list/tuple we just return key (found key)
             if not isinstance(current, (list, tuple, dict)):
-                return [item]
+                return [item] if not strip else ['']
         else:
             current, prepend = self.data, False
 
         result = sorted(self._list_keys(current))
 
-        if prepend:
+        # prepend item to list or not?
+        if prepend and not strip:
             """
             item was given so we should prepend key names with item
             """
@@ -275,6 +277,11 @@ class Context(object):
         return result
 
     def _list_keys(self, object):
+        """
+        Recursively lists keys
+        :param object: object to be
+        :return:
+        """
 
         result = []
 
