@@ -45,10 +45,33 @@ class ContextTest(unittest.TestCase):
         context['hello.test_call'] = Shout
         self.assertEqual(context['hello.test_call.shout'], "shout")
 
-    def test_object(self):
+    def test_getattr(self):
         """
         Test access to object attributes
         """
+
+    def test_keys(self):
+        data = [
+            (
+                # initial data
+                {'hello.world': 'world'},
+                # keys arg
+                'hello',
+                # expected response
+                ['hello.world']
+            ),
+            ({'hello.world.0.name': None, 'hello.world.1.name': None}, 'hello.world.0', ('hello.world.0.name', ),),
+            ({'hello.world.0.name': None, 'hello.world.1.name': None}, 'hello.world', ('hello.world.0.name', 'hello.world.1.name'),),
+
+        ]
+
+        for dataitem in data:
+            context = Context()
+            for k, v in dataitem[0].iteritems():
+                context[k] = v
+            result = context.keys(dataitem[1])
+            self.assertEqual(list(result), list(dataitem[2]), msg="got {} expected {} for item {}".format(result, dataitem[2], dataitem))
+
 
 if __name__ == "__main__":
     unittest.main()

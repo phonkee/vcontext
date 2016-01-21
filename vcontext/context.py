@@ -253,12 +253,26 @@ class Context(object):
         :return:
         """
 
+        result = []
         if item is not None:
-            current = self[item]
-        else:
-            current = self.data
+            current, prepend = self[item], True
 
-        return sorted(self._list_keys(current))
+            # if item is not dict/list/tuple we just return key (found key)
+            if not isinstance(current, (list, tuple, dict)):
+                return [item]
+        else:
+            current, prepend = self.data, False
+
+        result = sorted(self._list_keys(current))
+
+        if prepend:
+            """
+            item was given so we should prepend key names with item
+            """
+            for i, value in enumerate(result):
+                result[i] = '.'.join((item, value))
+
+        return result
 
     def _list_keys(self, object):
 
@@ -307,14 +321,13 @@ if __name__ == "__main__":
 
     ctx['hello.test.data.mamma'] = 'hell'
     # print ctx.data
-
     # print ctx.keys()
-
     # ctx['result.users.5.user.name'] = 'Peter'
     # # ctx['result.users.88.user.username'] = 'phonkee'
     # print ctx.dumps()
 
-
     context = Context()
     context['hello.world'] = "yay"
+    context['hello.something.key'] = "yay"
+
     print context.keys()

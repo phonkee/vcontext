@@ -3,12 +3,15 @@
 # from distutils.core import setup
 from setuptools import setup
 
-with open('README.md') as readme_file:
-    long_description = readme_file.read()
+try:
+    with open('README.md') as readme_file:
+        long_description = readme_file.read()
+except:
+    long_description = ""
 
 setup(
     name='vcontext',
-    version='0.5',
+    version='0.6',
     url='https://github.com/phonkee/vcontext',
     description='Context data structure',
     long_description=long_description,
