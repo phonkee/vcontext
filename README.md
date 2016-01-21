@@ -17,24 +17,26 @@ Example:
 --------
 
 ```python
-    context = Context({
-        'status': 200,
-        'message': 'OK',
-        'result': [
-            {
-                'user': {
-                    'username': 'phonkee',
-                    'name': 'Peter Vrba'
-                }
+context = Context({
+    'status': 200,
+    'message': 'OK',
+    'result': [
+        {
+            'user': {
+                'username': 'phonkee',
+                'name': 'Peter Vrba'
             }
-        ]
-    })
+        }
+    ]
+})
 ```
 
 You can access data like this:
     
-    assert context['result.0.user.username'] == 'phonkee'
-    assert context['status'] == 200
+```python
+assert context['result.0.user.username'] == 'phonkee'
+assert context['status'] == 200
+```
     
 If the data is not found, `KeyError` is raised on part of item that was not found. Context provides `get` method where 
 you can specify default value if value is not found and that will never raise exception.
@@ -46,25 +48,27 @@ Item can have multiple parts. Rules are following:
 
 Context can also be used to build complicated datastructures with ease.
 Lets build a structure from previous example:
-    
-    context = Context()
-    context['status'] = 200
-    context['message'] = 'OK'
-    context['result.0.user.username'] = 'phonkee'
-    context['result.0.user.name'] = 'Peter Vrba'
 
-    assert context.data == {
-        'status': 200,
-        'message': 'OK',
-        'result': [
-            {
-                'user': {
-                    'username': 'phonkee',
-                    'name': 'Peter Vrba'
-                }
+```python
+context = Context()
+context['status'] = 200
+context['message'] = 'OK'
+context['result.0.user.username'] = 'phonkee'
+context['result.0.user.name'] = 'Peter Vrba'
+
+assert context.data == {
+    'status': 200,
+    'message': 'OK',
+    'result': [
+        {
+            'user': {
+                'username': 'phonkee',
+                'name': 'Peter Vrba'
             }
-        ]
-    }
+        }
+    ]
+}
+```
 
 Build items:
 ------------
@@ -72,11 +76,13 @@ Build items:
 Context would be useless if it only supported get of values. Context has support also to create/delete values on 
 underlying datas by given `item`. Example:
 
-    context = Context()
-    context['result.0'] = 'phonkee'
+```python
+context = Context()
+context['result.0'] = 'phonkee'
 
-    del context['result.0']
-    assert len(context['result']) == 0
+del context['result.0']
+assert len(context['result']) == 0
+```
 
 Isn't that cute little helper?
 
@@ -86,9 +92,11 @@ keys:
 Context also supports `keys` method. By calling this method context traverses recursively object. It has support for
 dict/list, for custom object it returns just the object key.
 
-    context = Context()
-    context['hello.world'] = 'yay'
-    assert context.keys() == ['hello.world']
+```python
+context = Context()
+context['hello.world'] = 'yay'
+assert context.keys() == ['hello.world']
+```
 
 Contribute:
 -----------
