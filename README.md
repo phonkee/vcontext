@@ -9,7 +9,7 @@ Context does not wrap data in itself, rather just access them. Context has `data
 `__getitem__` vs `__getattribute__`
 -------------------------------
 
-For vcontext I have decided to use `__getitem__` approach, since I wanted to be consistend with access to array indices.
+For vcontext I have decided to use `__getitem__` approach, since I wanted to have consistent dot access also to lists/tuples.
 This would be impossible using `__getattr__`.
 
 
