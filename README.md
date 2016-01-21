@@ -15,7 +15,8 @@ This would be impossible using `__getattr__`.
 
 Example:
 --------
-    
+
+```python
     context = Context({
         'status': 200,
         'message': 'OK',
@@ -28,6 +29,7 @@ Example:
             }
         ]
     })
+```
 
 You can access data like this:
     
