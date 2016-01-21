@@ -5,7 +5,7 @@ Context is dictionary like datastructure with custom access to items.
 You can access your data by dot access. 
 Context does not wrap data in itself, rather just access them. Context has `data` attribute where data is stored.
 
-#### `__getitem__` vs `__getattribute__`
+###### `__getitem__` vs `__getattribute__`
 
 For vcontext I have decided to use `__getitem__` approach, since I wanted to have consistent dot access also to lists/tuples.
 This would be impossible using `__getattr__`.
