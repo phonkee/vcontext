@@ -105,8 +105,10 @@ Contributions are welcome, there are still a lot of parts to be enhanced.
 
 TODO:
 -----
-* add support for special list key __append__ so we can append to list. e.g. `context['result.usernames.__append__'] = 'phonkee'` 
-
+* add support for special list key __append__ so we can append to list. e.g: 
+```python
+context['result.usernames.__append__'] = 'phonkee'` 
+```
 Author
 ------
 
