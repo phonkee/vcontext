@@ -10,8 +10,14 @@ Context does not wrap data in itself, rather just access them. Context has `data
 For `Context` I have decided to use `__getitem__` approach, since I wanted to have consistent dot access also to lists/tuples.
 This would be impossible using `__getattr__`.
 
+#### Item
 
-## Example:
+Item is dot-separated path to value. This item is splitted and values have following rules
+* string - access to dictionary item or object attribute
+* integer - access to list item
+* first part must be string (since Context is a dictionary)
+
+###### Example:
 
 ```python
 context = Context({
@@ -26,22 +32,13 @@ context = Context({
         }
     ]
 })
-```
-
-You can access data like this:
-    
-```python
 assert context['result.0.user.username'] == 'phonkee'
 assert context['status'] == 200
 ```
-    
+
 If the data is not found, `KeyError` is raised on part of item that was not found. Context provides `get` method where 
 you can specify default value if value is not found and that will never raise exception.
 
-Item can have multiple parts. Rules are following:
-* string - access to dictionary item or object attribute
-* integer - access to list item
-* first part must be string (since Context is a dictionary)
 
 Context can also be used to build complicated datastructures with ease.
 Lets build a structure from previous example:
