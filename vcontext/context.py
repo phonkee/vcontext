@@ -300,6 +300,25 @@ class Context(object):
 
         return result
 
+    def items(self):
+        """
+        Return key/value items (tuple)
+        :return:
+        """
+
+        return list(self.iteritems())
+
+    def iteritems(self):
+        """
+        Return key/value items (tuple)
+        :return:
+        """
+
+        for key in self.keys():
+            yield (key, self[key])
+
+        raise StopIteration
+
 
 if __name__ == "__main__":
 
@@ -333,9 +352,9 @@ if __name__ == "__main__":
     # print ctx.dumps()
 
     context = Context()
-    context['hello.world'] = "yay"
-    context['hello.something.key'] = "yay"
+    context['hello.world'] = "yeah"
+    context['hello.0.something.key'] = "yay"
+    context['hello.1.something.key'] = "yay"
 
-    print context['hellos.something.key']
-
-    print context.keys()
+    print "Keys:", context.keys()
+    print "Items:", context.items()
