@@ -318,9 +318,8 @@ if __name__ == "__main__":
         },
     })
     ctx['hello.users.5.user.username'] = 'phonkee'
-    ctx['hello.users.5.user.name'] = 'Peter Vrba'
     ctx['hello.users.5.user.github'] = 'phonkee'
-    ctx['hello.users.5.user.email.0'] = 'phonkee@phonkee.eu'
+    ctx['hello.users.5.user.email.0'] = 'test@example.com'
     ctx['hello.list.0'] = 'yeah we support deep structures'
 
     ctx['hello.object'] = Test()
