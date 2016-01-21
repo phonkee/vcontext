@@ -34,8 +34,11 @@ You can access data like this:
     assert context['result.0.user.username'] == 'phonkee'
     assert context['status'] == 200
     
-Key can have multiple parts. Rules are following:
-* string - access to dictionary key or object attribute
+If the data is not found, KeyError is raised on part of item that was not found. Context provides `get` method where 
+you can specify default value if value is not found.
+
+Item can have multiple parts. Rules are following:
+* string - access to dictionary item or object attribute
 * integer - access to list item
 * first part must be string (since Context is a dictionary)
 
@@ -61,12 +64,19 @@ Lets build a structure from previous example:
         ]
     }
 
-Context has also support for delete so let's assume that we use context from previous example:
+Build items:
+------------
+
+Context would be useless if it only supported get of values. Context has support also to create/delete values on 
+underlying datas by given `item`. Example:
+
+    context = Context()
+    context['result.0'] = 'phonkee'
 
     del context['result.0']
     assert len(context['result']) == 0
 
-Isn't that neat small helper for your next projects?
+Isn't that cute little helper?
 
 keys:
 -----
@@ -78,12 +88,10 @@ dict/list, for custom object it returns just the object key.
     context['hello.world'] = 'yay'
     assert context.keys() == ['hello.world']
 
-
 Contribute:
 -----------
 
 Contributions are welcome, there are still a lot of parts to be enhanced.
-
 
 TODO:
 -----

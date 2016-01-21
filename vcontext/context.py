@@ -337,4 +337,6 @@ if __name__ == "__main__":
     context['hello.world'] = "yay"
     context['hello.something.key'] = "yay"
 
+    print context['hellos.something.key']
+
     print context.keys()
