@@ -89,9 +89,8 @@ assert context.keys() == ['hello.world']
 ### api:
 Context provides following methods:
 
-* `keys` - returns list of all keys
-    attributes:
-        * item - item to be dumped to json
+* `keys` - returns list of all keys, attributes:
+    * item - item to be dumped to json
 * `items` - list of key value items (tuple key, value), **kwargs passed to `keys` method
 * `iteritems` - generator version of items, **kwargs passed to `keys` method
 * `dumps` - dump to json, attributes:
