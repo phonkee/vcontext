@@ -84,7 +84,7 @@ context['result.0'] = 'phonkee'
 The data for context is now:
 
 ```python
-assert context.data = {
+assert context.data == {
     'result': ['phonkee']
 }
 ```
