@@ -1,4 +1,4 @@
-# vcontext
+# Context
 
 `vcontext` package provides single object `Context`. 
 Context is dictionary like datastructure with custom access to items.
