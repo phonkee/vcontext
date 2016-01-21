@@ -6,7 +6,6 @@ See README.md
 """
 import copy
 import json
-import pprint
 
 
 class Context(object):
@@ -191,7 +190,7 @@ class Context(object):
         """
         target = self.data
         if item:
-            target = self[item]
+            target = self.get(item, default=None)
 
         return json.dumps(target, **kwargs)
 
@@ -300,21 +299,23 @@ class Context(object):
 
         return result
 
-    def items(self):
+    def items(self, **kwargs):
         """
         Return key/value items (tuple)
+        **kwargs are passed directly to keys method.
         :return:
         """
 
-        return list(self.iteritems())
+        return list(self.iteritems(**kwargs))
 
-    def iteritems(self):
+    def iteritems(self, **kwargs):
         """
         Return key/value items (tuple)
+        **kwargs are passed directly to keys method.
         :return:
         """
 
-        for key in self.keys():
+        for key in self.keys(**kwargs):
             yield (key, self[key])
 
         raise StopIteration
