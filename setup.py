@@ -11,7 +11,7 @@ except:
 
 setup(
     name='vcontext',
-    version='0.6',
+    version='0.7',
     url='https://github.com/phonkee/vcontext',
     description='Context data structure',
     long_description=long_description,

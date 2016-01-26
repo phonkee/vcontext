@@ -62,9 +62,6 @@ class Context(object):
 
         actual = self.data
         for i, part in enumerate(parsed):
-
-            # he
-
             try:
                 actual = actual[part]
             except TypeError:
@@ -194,9 +191,9 @@ class Context(object):
 
         return json.dumps(target, **kwargs)
 
-    def clone(self):
+    def copy(self):
         """
-        Clone clones context to new one (performs deep copy)
+        Copy performs deep copy of underlying data and returns context with this data
         :return:
         """
         return Context(copy.deepcopy(self.data), dict_=self.dict_)
@@ -357,5 +354,6 @@ if __name__ == "__main__":
     context['hello.0.something.key'] = "yay"
     context['hello.1.something.key'] = "yay"
 
-    print "Keys:", context.keys()
-    print "Items:", context.items()
+    # print context, context.copy()
+    # print "Keys:", context.keys()
+    # print "Items:", context.items()

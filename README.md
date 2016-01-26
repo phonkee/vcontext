@@ -75,7 +75,7 @@ assert len(context['result']) == 0
 
 Isn't that cute little helper?
 
-## keys:
+## .keys(item=None):
 
 Context also supports `keys` method. By calling this method context traverses recursively object. It has support for
 dict/list, for custom object it returns just the object key.
@@ -86,15 +86,15 @@ context['hello.world'] = 'yay'
 assert context.keys() == ['hello.world']
 ```
 
-### api:
+## api:
 Context provides following methods:
 
-* `clone` - deepcopies data and returns new context
-* `dumps` - dump to json, attributes:
+* `.copy()` - deepcopies data and returns new context
+* `.dumps(item=None)` - dump to json, attributes:
     * item - item to be dumped to json
-* `items` - list of key value items (tuple key, value), **kwargs passed to `keys` method
-* `iteritems` - generator version of items, **kwargs passed to `keys` method
-* `keys` - returns list of all keys, attributes:
+* `.items(**kwargs)` - list of key value items (tuple key, value), **kwargs passed to `keys` method
+* `.iteritems(**kwargs)` - generator version of items, **kwargs passed to `keys` method
+* `keys(item=None)` - returns list of all keys, attributes:
     * item - item to be dumped to json
 
 
