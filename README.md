@@ -5,6 +5,11 @@ Context is dictionary like datastructure with custom access to items.
 You can access your data by dot access. 
 Context does not wrap data in itself, rather just access them. Context has `data` attribute where data is stored.
 
+## Install
+vcontext is on [pypi](https://pypi.python.org/pypi/vcontext) so you can simply:
+
+`pip install vcontext`
+
 ###### `__getitem__` vs `__getattribute__`
 
 For `Context` I have decided to use `__getitem__` approach, since I wanted to have consistent dot access also to lists/tuples.
