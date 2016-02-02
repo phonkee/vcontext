@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-# from distutils.core import setup
+import os
+import re
 from setuptools import setup
+
 
 try:
     import pypandoc
@@ -9,11 +11,20 @@ try:
 except(IOError, ImportError):
     long_description = open('README.md').read()
 
-version = open('VERSION').read()
+
+def get_version():
+    version_file = os.path.join('vcontext', '__init__.py')
+    initfile_lines = open(version_file, 'rt').readlines()
+    VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+    for line in initfile_lines:
+        mo = re.search(VSRE, line, re.M)
+        if mo:
+            return mo.group(1)
+    raise RuntimeError('Unable to find version string in %s.' % (version_file,))
 
 setup(
     name='vcontext',
-    version=version,
+    version=get_version(),
     url='https://github.com/phonkee/vcontext',
     description='Context data structure',
     long_description=long_description,
