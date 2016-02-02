@@ -16,6 +16,8 @@ class Context(object):
     """
 
     data = None
+
+    # custom dict functionality currently isn't supported
     dict_ = dict
 
     def __init__(self, *args, **kwargs):
@@ -39,10 +41,10 @@ class Context(object):
 
         for i, part in enumerate(parsed):
 
-            last = i == len(parsed) - 1
+            is_last = i == len(parsed) - 1
 
             try:
-                if last:
+                if is_last:
                     del actual[part]
                     return
                 actual = actual[part]
@@ -134,10 +136,10 @@ class Context(object):
             :return:
             """
             if isinstance(n, (int, long)):
-                result = self._build_item(prepare_list([], n), parts, value=value)
+                new_item = prepare_list([], n)
             else:
-                result = self._build_item(self.dict_(), parts, value=value)
-            return result
+                new_item = self.dict_()
+            return self._build_item(new_item, parts, value=value)
 
         if isinstance(object, list):
             # Handling list
@@ -173,8 +175,7 @@ class Context(object):
                 object[part] = prepare_next(next_part)
 
         else:
-            # @TODO: object handling getattr/setattr
-            print "this is object", part, object
+            raise NotImplementedError('settings of object not supported currently')
 
         return object
 
@@ -281,14 +282,12 @@ class Context(object):
 
         result = []
 
-        if isinstance(object, dict):
-            for k, v in object.iteritems():
-                if isinstance(v, (list, tuple, dict)):
-                    result += ["{}.{}".format(k, key) for key in self._list_keys(v)]
-                else:
-                    result.append(k)
-        elif isinstance(object, (list, tuple)):
-            for k, v in enumerate(object):
+        if isinstance(object, (dict, list, tuple)):
+            if isinstance(object, dict):
+                iterable = object.iteritems()
+            else:
+                iterable = enumerate(object)
+            for k, v in iterable:
                 if isinstance(v, (list, tuple, dict)):
                     result += ["{}.{}".format(k, key) for key in self._list_keys(v)]
                 else:
@@ -317,6 +316,18 @@ class Context(object):
 
         raise StopIteration
 
+    def __contains__(self, key):
+        """
+        Support for "in"
+        :param key:
+        :return:
+        """
+        try:
+            self[str(key)]
+        except KeyError:
+            return False
+        return True
+
 
 if __name__ == "__main__":
 
@@ -325,7 +336,6 @@ if __name__ == "__main__":
         data = {
             'mamma': 'mia'
         }
-
 
     ctx = Context({
         'hello': {
@@ -354,6 +364,6 @@ if __name__ == "__main__":
     context['hello.0.something.key'] = "yay"
     context['hello.1.something.key'] = "yay"
 
-    # print context, context.copy()
-    # print "Keys:", context.keys()
-    # print "Items:", context.items()
+    print context, context.copy()
+    print "Keys:", context.keys()
+    print "Items:", context.items()

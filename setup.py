@@ -2,16 +2,15 @@
 
 # from distutils.core import setup
 from setuptools import setup
+import pypandoc
 
-try:
-    with open('README.md') as readme_file:
-        long_description = readme_file.read()
-except:
-    long_description = ""
+long_description = pypandoc.convert('README.md', 'rst')
+
+version = open('VERSION').read()
 
 setup(
     name='vcontext',
-    version='0.7',
+    version=version,
     url='https://github.com/phonkee/vcontext',
     description='Context data structure',
     long_description=long_description,
@@ -26,8 +25,5 @@ setup(
     install_requires=[
     ],
     test_suite="vcontext.tests",
-    package_data={
-        # If any package contains *.txt or *.rst files, include them:
-        '': ['*.md'],
-    }
+    include_package_data=True,
 )

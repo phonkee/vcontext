@@ -1,6 +1,11 @@
-__author__ = 'Peter Vrba <phonkee@phonkee.eu>'
 from context import Context
 
+__author__ = 'Peter Vrba <phonkee@phonkee.eu>'
+
+# fetch version from package VERSION file
+__VERSION__ = open('../VERSION', 'r').read().strip()
+
 __all__ = [
-    'Context'
+    'Context',
+    '__VERSION__'
 ]
