@@ -13,6 +13,7 @@ This would be impossible using `__getattr__`.
 #### Item
 
 Item is dot-separated path to value. This item is splitted and values have following rules
+
 * string - access to dictionary item or object attribute
 * integer - access to list item
 * first part must be string (since Context is a dictionary)

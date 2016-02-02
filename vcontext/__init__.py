@@ -1,4 +1,5 @@
 from context import Context
+import plugins
 
 __author__ = 'Peter Vrba <phonkee@phonkee.eu>'
 
