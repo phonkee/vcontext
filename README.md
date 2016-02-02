@@ -10,7 +10,8 @@ vcontext is on [pypi](https://pypi.python.org/pypi/vcontext) so you can simply:
 
 `pip install vcontext`
 
-###### `__getitem__` vs `__getattribute__`
+
+##### `__getitem__` vs `__getattribute__`
 
 For `Context` I have decided to use `__getitem__` approach, since I wanted to have consistent dot access also to lists/tuples.
 This would be impossible using `__getattr__`.
