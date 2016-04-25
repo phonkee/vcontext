@@ -70,6 +70,36 @@ class ContextTest(unittest.TestCase):
             result = context.keys(dataitem[1])
             self.assertEqual(list(result), list(dataitem[2]), msg="got {} expected {} for item {}".format(result, dataitem[2], dataitem))
 
+    def test_expand(self):
+        """
+        Test expand functionality
+        :return:
+        """
+
+        data = [
+            (
+                {'range_value': {'__range__': [2]},},
+                [{'range_value': 0}, {'range_value': 1}]
+            ),
+            (
+                {'range_value': {'__range__': [1], '__format__': 'value_{value}'},},
+                [{'range_value': 'value_0'}]
+            ),
+            (
+                {'range_value': {'__range__': [2], '__format__': 'value_{value}', '__exclude__': [0]}},
+                [{'range_value': 'value_1'}]
+            ),
+            (
+                {'choice_value': {'__choices__': ['a', 'b'], '__format__': 'value_{value}'}},
+                [{'choice_value': 'value_a'}, {'choice_value': 'value_b'}]
+            ),
+        ]
+
+        for item in data:
+            inp, expected = item
+            context = Context(inp)
+            self.assertEqual(list(context.expand()), expected)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -7,6 +7,8 @@ See README.md
 import copy
 import json
 
+import itertools
+
 
 class Context(object):
     """
@@ -327,6 +329,127 @@ class Context(object):
         except KeyError:
             return False
         return True
+
+    def expand(self):
+        """
+        expand
+
+        This method adds functionality to expand data. Expansion is applied on all levels deep structures built with
+        dict/list/tuple. Expand supports top level just dict (since vcontext nature), but that's not a limitation since
+        you can have nested lists/dicts.
+        Expand makes cartesian product of all expanded values on all levels deep!
+
+        If a value is a dict and has one of followint keys provided it is a subject to expansion:
+        * __range__ - value will chosen from defined range, arguments are directly passed to pythons `range`.
+        * __choices__ - value will be chosen from given list
+
+        If there is `__format__` key in this dictionary, it's used as format string. Expander uses `format` method on string and
+        passes the value as `value` key. Otherwise raw value will be returned.
+
+        Example of valid `__format__`:
+
+            '__format__': 'count_me_in_{value}'
+
+        Example:
+
+            data = {
+                'range_value': {
+                    '__range__': [2],
+                    '__format__': 'ranged_%s',
+                    '__exclude__': [0],
+                },
+                'choice_value': {
+                    '__choices__': ['a', 'b'],
+                    '__format__': 'value_{value}'
+                },
+            }
+            expanded = list(expand(data)
+            assert len(expanded) == 1
+
+            assert expanded == [{
+                'range_value': 'ranged_1',
+                'choice_value': 'a'
+            }
+            {
+                "range_value": 'ranged_1',
+                'choice_value': 'b'
+            }]
+        :return: generator of items
+        """
+
+        choices = []
+        ranges = []
+        other = []
+
+        # find expandable variables, currently detected by __choices__, __range__ keys.
+        for key in self.keys():
+            splitted = key.split('.__choices__.')
+            if len(splitted) > 1 and splitted[0] not in choices:
+                choices.append(splitted[0])
+                continue
+            splitted = key.split('.__range__.')
+            if len(splitted) > 1 and splitted[0] not in ranges:
+                ranges.append(splitted[0])
+                continue
+
+            if '.__format__' not in key:
+                other.append(key)
+
+        # prepare keys(choices, ranges) and list of expanded values to pass to cartesian product later in the code
+        keys = []
+        values = []
+
+        # get values for choices and ranges
+        for item in itertools.chain(choices, ranges):
+            formatter = self.get('{}.__format__'.format(item), None)
+            keys.append(item)
+
+            # all available values for expanded value.
+            tmp_values = []
+
+            # get iterator for either choice or range, otherwise KeyError is raised.
+            try:
+                iterator = self['{}.__choices__'.format(item)]
+            except KeyError:
+                try:
+                    iterator = range(*self['{}.__range__'.format(item)])
+                except KeyError:
+                    raise KeyError('Key not found: {}'.format(item))
+
+            # excluded values
+            try:
+                excluded = self['{}.__exclude__'.format(item)]
+            except KeyError:
+                excluded = []
+
+            # iterate over changes and prepare values
+            for value in iterator:
+
+                # check if value is not excluded
+                if value in excluded:
+                    continue
+
+                if formatter is not None:
+                    value = str(formatter).format(value=value)
+
+                # check if value is not excluded
+                if value in excluded:
+                    continue
+
+                tmp_values.append(value)
+
+            # add list of values for given key
+            values.append(tmp_values)
+
+        # make all combinations (itertools.product) - cartesian product
+        for combination in list(itertools.product(*values)):
+            # prepare new context
+            new = self.copy()
+
+            # add current combination data to new context
+            for i, v in enumerate(combination):
+                new[keys[i]] = v
+            yield new.data
 
 
 if __name__ == "__main__":
