@@ -330,7 +330,7 @@ class Context(object):
             return False
         return True
 
-    def expand(self):
+    def expand(self, as_context=False):
         """
         expand
 
@@ -449,8 +449,21 @@ class Context(object):
             # add current combination data to new context
             for i, v in enumerate(combination):
                 new[keys[i]] = v
-            yield new.data
 
+            if as_context:
+                yield Context(new.data)
+            else:
+                yield new.data
+
+    def update(self, other):
+        """
+        Update context with given context
+        :param other: context from which we emrge data
+        :return:
+        """
+        for key, value in other.items():
+            self[key] = value
+        return self
 
 if __name__ == "__main__":
 
