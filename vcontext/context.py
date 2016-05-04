@@ -247,6 +247,26 @@ class Context(object):
 
         return default
 
+    def pop(self, item, default=None):
+        """
+        Pops item from context
+        :param item:
+        :param default:
+        :return:
+        """
+
+        try:
+            result = self[item]
+        except KeyError:
+            result = default
+
+        try:
+            del self[item]
+        except KeyError:
+            pass
+
+        return result
+
     def copy_value(self, item=None):
         """
         value deep copies just value and returns. If not found raise error
@@ -518,6 +538,7 @@ if __name__ == "__main__":
         },
     })
 
+    print(ctx.data)
 
     ctx['hello.users.5.user.username'] = 'phonkee'
     ctx['hello.users.5.user.github'] = 'phonkee'
