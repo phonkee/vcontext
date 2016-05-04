@@ -511,17 +511,13 @@ if __name__ == "__main__":
         }
 
     ctx = Context({
-        'hello.something': {
+        'hello.something.deep.nested.will.be.parsed': {
             'hitty.other.something': 'kitty',
             'users': ["techno"],
             'test': Test(),
         },
     })
 
-    print(ctx.data)
-
-    import sys
-    sys.exit(1)
 
     ctx['hello.users.5.user.username'] = 'phonkee'
     ctx['hello.users.5.user.github'] = 'phonkee'
