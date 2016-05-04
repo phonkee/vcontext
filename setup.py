@@ -26,7 +26,7 @@ setup(
     name='vcontext',
     version=get_version(),
     url='https://github.com/phonkee/vcontext',
-    description='Context data structure',
+    description='Context _data structure',
     long_description=long_description,
 
     # author information
@@ -37,6 +37,7 @@ setup(
 
     # requirements
     install_requires=[
+        'six',
     ],
     test_suite="vcontext.tests",
     include_package_data=True,

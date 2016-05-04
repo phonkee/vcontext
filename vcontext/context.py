@@ -4,9 +4,10 @@ Context
 context is a proxy datastructure that provides advanced  dict-like access to underlying data with dotted notation.
 See README.md
 """
+from __future__ import print_function
 import copy
 import json
-
+import six
 import itertools
 
 
@@ -17,17 +18,20 @@ class Context(object):
     context is dict-like structure that has custom get/set/del item.
     """
 
-    data = None
+    _data = None
 
     # custom dict functionality currently isn't supported
     dict_ = dict
 
     def __init__(self, *args, **kwargs):
         self.dict_ = kwargs.pop('dict_', self.dict_)
-        self.data = self.dict_()
+        self._data = self.dict_()
+
         for d in args:
-            self.data.update(d)
-        self.data.update(kwargs)
+            assert isinstance(d, dict), 'Context init arg must be dictionsry'
+            self.update(d)
+
+        self.update(kwargs)
 
     def __delitem__(self, item):
         """
@@ -39,7 +43,7 @@ class Context(object):
         if not parsed:
             raise KeyError('no key provided')
 
-        actual = self.data
+        actual = self._data
 
         for i, part in enumerate(parsed):
 
@@ -64,7 +68,7 @@ class Context(object):
         if not parsed:
             raise KeyError('no key provided')
 
-        actual = self.data
+        actual = self._data
         for i, part in enumerate(parsed):
             try:
                 actual = actual[part]
@@ -83,7 +87,7 @@ class Context(object):
         setitem is more complicated one, because it needs to update values if exists, if not create appropriate one.
         Steps:
             * split item to parts
-            * start with self.data
+            * start with self._data
         :param item:
         :param value:
         :return:
@@ -97,12 +101,31 @@ class Context(object):
 
         # copy to new list
         parts = parsed[:]
-        self._build_item(self.data, parts, value=value)
+        self._build_item(self._data, parts, value= self._build_value(value))
 
-    def _build_item(self, object, parts, value=None):
+    def _build_value(self, value):
+        """
+        Build value builds value.
+        :param value:
+        :return:
+        """
+
+        if isinstance(value, dict):
+            for key in value.keys():
+                tmp = value.pop(key)
+                newvalue = self._build_value(tmp)
+                parsed = self._parse_item(str(key))
+                self._build_item(value, parsed, newvalue)
+        if isinstance(value, list):
+            for i, v in enumerate(value):
+                value[i] = self._build_value(v)
+
+        return value
+
+    def _build_item(self, obj, parts, value=None):
         """
         Get item
-        :param object:
+        :param obj:
         :param parts:
         :return:
         """
@@ -143,26 +166,26 @@ class Context(object):
                 new_item = self.dict_()
             return self._build_item(new_item, parts, value=value)
 
-        if isinstance(object, list):
+        if isinstance(obj, list):
             # Handling list
             try:
-                result = object[part]
+                result = obj[part]
                 if result is None:
                     # look at next part
                     result = prepare_next(next_part)
                 else:
-                    object[part] = self._build_item(result, parts, value=value)
+                    obj[part] = self._build_item(result, parts, value=value)
             except IndexError:
-                prepare_list(object, part)
+                prepare_list(obj, part)
 
                 # look at next part
                 result = prepare_next(next_part)
 
-            object[part] = result
+            obj[part] = result
 
-        elif isinstance(object, dict):
+        elif isinstance(obj, dict):
             try:
-                result = object[part]
+                result = obj[part]
 
                 # check list length!!
                 if isinstance(next_part, (int, long)):
@@ -172,14 +195,22 @@ class Context(object):
                     if not isinstance(result, dict):
                         result = self.dict_()
 
-                object[part] = self._build_item(result, parts, value=value)
+                obj[part] = self._build_item(result, parts, value=value)
             except KeyError:
-                object[part] = prepare_next(next_part)
+                obj[part] = prepare_next(next_part)
 
         else:
-            raise NotImplementedError('settings of object not supported currently')
+            raise NotImplementedError('settings of obj not supported currently')
 
-        return object
+        return obj
+
+    @property
+    def data(self):
+        """
+        Property for data
+        :return:
+        """
+        return self._data
 
     def dumps(self, item=None, **kwargs):
         """
@@ -188,7 +219,7 @@ class Context(object):
         :param kwargs: additional kwargs passed to json.dumps
         :return: json string
         """
-        target = self.data
+        target = self._data
         if item:
             target = self.get(item, default=None)
 
@@ -196,10 +227,10 @@ class Context(object):
 
     def copy(self):
         """
-        Copy performs deep copy of underlying data and returns context with this data
+        Copy performs deep copy of underlying _data and returns context with this _data
         :return:
         """
-        return Context(copy.deepcopy(self.data), dict_=self.dict_)
+        return Context(copy.deepcopy(self._data), dict_=self.dict_)
 
     def get(self, item, default=None):
         """
@@ -223,7 +254,7 @@ class Context(object):
         :return:
         """
         if item is None:
-            obj = self.data
+            obj = self._data
         else:
             obj = self[item]
         return copy.deepcopy(obj)
@@ -261,7 +292,7 @@ class Context(object):
             if not isinstance(current, (list, tuple, dict)):
                 return [item] if not strip else ['']
         else:
-            current, prepend = self.data, False
+            current, prepend = self._data, False
 
         result = sorted(self._list_keys(current))
 
@@ -275,20 +306,20 @@ class Context(object):
 
         return result
 
-    def _list_keys(self, object):
+    def _list_keys(self, obj):
         """
         Recursively lists keys
-        :param object: object to be
+        :param obj: object to be
         :return:
         """
 
         result = []
 
-        if isinstance(object, (dict, list, tuple)):
-            if isinstance(object, dict):
-                iterable = object.iteritems()
+        if isinstance(obj, (dict, list, tuple)):
+            if isinstance(obj, dict):
+                iterable = six.iteritems(obj)
             else:
-                iterable = enumerate(object)
+                iterable = enumerate(obj)
             for k, v in iterable:
                 if isinstance(v, (list, tuple, dict)):
                     result += ["{}.{}".format(k, key) for key in self._list_keys(v)]
@@ -334,7 +365,7 @@ class Context(object):
         """
         expand
 
-        This method adds functionality to expand data. Expansion is applied on all levels deep structures built with
+        This method adds functionality to expand _data. Expansion is applied on all levels deep structures built with
         dict/list/tuple. Expand supports top level just dict (since vcontext nature), but that's not a limitation since
         you can have nested lists/dicts.
         Expand makes cartesian product of all expanded values on all levels deep!
@@ -352,7 +383,7 @@ class Context(object):
 
         Example:
 
-            data = {
+            _data = {
                 'range_value': {
                     '__range__': [2],
                     '__format__': 'ranged_%s',
@@ -363,7 +394,7 @@ class Context(object):
                     '__format__': 'value_{value}'
                 },
             }
-            expanded = list(expand(data)
+            expanded = list(expand(_data)
             assert len(expanded) == 1
 
             assert expanded == [{
@@ -446,23 +477,29 @@ class Context(object):
             # prepare new context
             new = self.copy()
 
-            # add current combination data to new context
+            # add current combination _data to new context
             for i, v in enumerate(combination):
                 new[keys[i]] = v
 
             if as_context:
-                yield Context(new.data)
+                yield Context(new._data)
             else:
-                yield new.data
+                yield new._data
 
     def update(self, other):
         """
-        Update context with given context
-        :param other: context from which we emrge data
+        Update context with given context or dict
+        :param other: context from which we emrge _data
         :return:
         """
-        for key, value in other.items():
-            self[key] = value
+
+        if isinstance(other, Context):
+            for key, value in other.iteritems():
+                self[key] = value
+        elif isinstance(other, dict):
+            for key, value in six.iteritems(other):
+                self[key] = value
+
         return self
 
 if __name__ == "__main__":
@@ -474,12 +511,18 @@ if __name__ == "__main__":
         }
 
     ctx = Context({
-        'hello': {
-            'hitty': 'kitty',
+        'hello.something': {
+            'hitty.other.something': 'kitty',
             'users': ["techno"],
             'test': Test(),
         },
     })
+
+    print(ctx.data)
+
+    import sys
+    sys.exit(1)
+
     ctx['hello.users.5.user.username'] = 'phonkee'
     ctx['hello.users.5.user.github'] = 'phonkee'
     ctx['hello.users.5.user.email.0'] = 'test@example.com'
@@ -488,8 +531,8 @@ if __name__ == "__main__":
     ctx['hello.object'] = Test()
     # print ctx.dumps(indent=4)
 
-    ctx['hello.test.data.mamma'] = 'hell'
-    # print ctx.data
+    ctx['hello.test._data.mamma'] = 'hell'
+    # print ctx._data
     # print ctx.keys()
     # ctx['result.users.5.user.name'] = 'Peter'
     # # ctx['result.users.88.user.username'] = 'phonkee'
@@ -500,6 +543,6 @@ if __name__ == "__main__":
     context['hello.0.something.key'] = "yay"
     context['hello.1.something.key'] = "yay"
 
-    print context, context.copy()
-    print "Keys:", context.keys()
-    print "Items:", context.items()
+    print(context, context.copy())
+    print("Keys:", context.keys())
+    print("Items:", context.items())

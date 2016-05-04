@@ -52,7 +52,7 @@ class ContextTest(unittest.TestCase):
         """
         data = [
             (
-                # initial data
+                # initial _data
                 {'hello.world': 'world'},
                 # keys arg
                 'hello',
