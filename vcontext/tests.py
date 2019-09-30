@@ -2,7 +2,7 @@ import operator
 import unittest
 
 from context import Context
-
+import six
 
 class ContextTest(unittest.TestCase):
 
@@ -65,7 +65,7 @@ class ContextTest(unittest.TestCase):
 
         for dataitem in data:
             context = Context()
-            for k, v in dataitem[0].iteritems():
+            for k, v in six.iteritems(dataitem[0]):
                 context[k] = v
             result = context.keys(dataitem[1])
             self.assertEqual(list(result), list(dataitem[2]), msg="got {} expected {} for item {}".format(result, dataitem[2], dataitem))

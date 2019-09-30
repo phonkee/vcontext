@@ -160,7 +160,7 @@ class Context(object):
             :param n: part
             :return:
             """
-            if isinstance(n, (int, long)):
+            if isinstance(n, (int, )):
                 new_item = prepare_list([], n)
             else:
                 new_item = self.dict_()
@@ -188,7 +188,7 @@ class Context(object):
                 result = obj[part]
 
                 # check list length!!
-                if isinstance(next_part, (int, long)):
+                if isinstance(next_part, (int, )):
                     prepare_list(result, next_part)
                 else:
                     # check item in dictionary

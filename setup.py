@@ -2,11 +2,12 @@
 
 import os
 import re
-from setuptools import setup
 
+from setuptools import setup
 
 try:
     import pypandoc
+
     long_description = pypandoc.convert('README.md', 'rst')
 except(IOError, ImportError):
     long_description = open('README.md').read()
@@ -15,12 +16,13 @@ except(IOError, ImportError):
 def get_version():
     version_file = os.path.join('vcontext', '__init__.py')
     initfile_lines = open(version_file, 'rt').readlines()
-    VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+    version_regex = r"^__version__ = ['\"]([^'\"]*)['\"]"
     for line in initfile_lines:
-        mo = re.search(VSRE, line, re.M)
+        mo = re.search(version_regex, line, re.M)
         if mo:
             return mo.group(1)
     raise RuntimeError('Unable to find version string in %s.' % (version_file,))
+
 
 setup(
     name='vcontext',
