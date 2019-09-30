@@ -5,12 +5,7 @@ import re
 
 from setuptools import setup
 
-try:
-    import pypandoc
-
-    long_description = pypandoc.convert('README.md', 'rst')
-except(IOError, ImportError):
-    long_description = open('README.md').read()
+long_description = open('README.rst').read()
 
 
 def get_version():
@@ -28,9 +23,8 @@ setup(
     name='vcontext',
     version=get_version(),
     url='https://github.com/phonkee/vcontext',
-    description='Context _data structure',
+    description='Context data structure',
     long_description=long_description,
-    long_description_content_type="text/markdown",
 
     # author information
     author='Peter Vrba',
