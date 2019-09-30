@@ -30,6 +30,7 @@ setup(
     url='https://github.com/phonkee/vcontext',
     description='Context _data structure',
     long_description=long_description,
+    long_description_content_type="text/markdown",
 
     # author information
     author='Peter Vrba',
