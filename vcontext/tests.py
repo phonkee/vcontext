@@ -1,7 +1,7 @@
 import operator
 import unittest
 
-from context import Context
+from .context import Context
 import six
 
 class ContextTest(unittest.TestCase):

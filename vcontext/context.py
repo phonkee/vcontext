@@ -5,10 +5,12 @@ context is a proxy datastructure that provides advanced  dict-like access to und
 See README.md
 """
 from __future__ import print_function
+
 import copy
-import json
-import six
 import itertools
+import json
+
+import six
 
 
 class Context(object):
@@ -56,7 +58,7 @@ class Context(object):
                 actual = actual[part]
 
             except (KeyError, IndexError):
-                raise KeyError(".".join([str(x) for x in parsed[:i+1]]))
+                raise KeyError(".".join([str(x) for x in parsed[:i + 1]]))
 
     def __getitem__(self, item):
         """
@@ -75,7 +77,7 @@ class Context(object):
             except TypeError:
                 actual = getattr(actual, part)
             except (KeyError, IndexError):
-                raise KeyError(".".join([str(x) for x in parsed[:i+1]]))
+                raise KeyError(".".join([str(x) for x in parsed[:i + 1]]))
 
             while callable(actual):
                 actual = actual()
@@ -101,7 +103,7 @@ class Context(object):
 
         # copy to new list
         parts = parsed[:]
-        self._build_item(self._data, parts, value= self._build_value(value))
+        self._build_item(self._data, parts, value=self._build_value(value))
 
     def _build_value(self, value):
         """
@@ -160,7 +162,7 @@ class Context(object):
             :param n: part
             :return:
             """
-            if isinstance(n, (int, )):
+            if isinstance(n, (int,)):
                 new_item = prepare_list([], n)
             else:
                 new_item = self.dict_()
@@ -188,7 +190,7 @@ class Context(object):
                 result = obj[part]
 
                 # check list length!!
-                if isinstance(next_part, (int, )):
+                if isinstance(next_part, (int,)):
                     prepare_list(result, next_part)
                 else:
                     # check item in dictionary
@@ -522,13 +524,14 @@ class Context(object):
 
         return self
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     class Test(object):
         something = 'else'
         data = {
             'mamma': 'mia'
         }
+
 
     ctx = Context({
         'hello.something.deep.nested.will.be.parsed': {
